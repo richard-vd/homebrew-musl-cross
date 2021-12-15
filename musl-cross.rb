@@ -49,9 +49,9 @@ class MuslCross < Formula
     sha256 "5275bb04f4863a13516b2f39392ac5e272f5e1bb8057b18aec1c9b79d73d8fb2"
   end
 
-  resource "musl-1.2.0.tar.gz" do
-    url "https://www.musl-libc.org/releases/musl-1.2.0.tar.gz"
-    sha256 "c6de7b191139142d3f9a7b5b702c9cae1b5ee6e7f57e582da9328629408fd4e8"
+  resource "musl-1.2.2.tar.gz" do
+    url "https://www.musl-libc.org/releases/musl-1.2.2.tar.gz"
+    sha256 "9b969322012d796dc23dda27a35866034fa67d8fb67e0e2c45c913c3d43219dd"
   end
 
   resource "binutils-2.33.1.tar.bz2" do
