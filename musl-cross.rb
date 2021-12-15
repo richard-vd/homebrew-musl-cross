@@ -84,6 +84,11 @@ class MuslCross < Formula
     sha256 "93acc87beb03c40764a7d5633454787c4a49d58fc3a0acec2cab85cbc3416e6d"
   end
 
+  patch do # add gcc-11.2.0 hash and patches
+    url "https://github.com/richfelker/musl-cross-make/commit/5157b369.patch?full_index=1"
+    sha256 "db203755c0ff0d1908e2e36c16fc44e3ef33a066b88a2fd8819cdd9cb046e227"
+  end
+
   def install
     targets = []
     targets.push "x86_64-linux-musl" if build.with? "x86_64"
