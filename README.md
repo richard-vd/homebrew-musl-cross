@@ -1,10 +1,10 @@
 # homebrew-musl-cross
 
 **One-click static-friendly musl-based GCC macOS-to-Linux cross-compilers**
-based on [richfelker/musl-cross-make](https://github.com/richfelker/musl-cross-make).
+based on [FiloSottile/homebrew-musl-cross](https://github.com/FiloSottile/homebrew-musl-cross) and [richfelker/musl-cross-make](https://github.com/richfelker/musl-cross-make).
 
 ```
-brew install filosottile/musl-cross/musl-cross
+brew install richard-vd/musl-cross/musl-cross
 ```
 
 By default it will build a full cross compiler toolchain targeting musl Linux amd64.
@@ -19,7 +19,7 @@ Musl is specifically engineered to support static binaries.
 Other architectures are supported. For example you can build a Raspberry Pi cross-compiler:
 
 ```
-brew install FiloSottile/musl-cross/musl-cross --without-x86_64 --with-arm-hf
+brew install richard-vd/musl-cross/musl-cross --without-x86_64 --with-arm-hf
 ```
 
 You can also use `--with-i486` (x86 32-bit), `--with-aarch64` (ARM 64-bit), `--with-arm` (ARM soft-float), `--with-mips` and `--with-powerpc`.
