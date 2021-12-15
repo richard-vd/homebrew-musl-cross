@@ -74,16 +74,6 @@ class MuslCross < Formula
     sha256 "d18ca11f8ad1a39ab6d03d3dcb3365ab416720fcb65b42d69f34f51bf0a0e859"
   end
 
-  patch do # disable arm vdso in musl 1.2.0
-    url "https://github.com/richfelker/musl-cross-make/commit/d6ded50d.patch?full_index=1"
-    sha256 "6a1ab78f59f637c933582db515dd0d5fe4bb6928d23a9b02948b0cdb857466c8"
-  end
-
-  patch do # use CURDIR instead of PWD
-    url "https://github.com/richfelker/musl-cross-make/commit/a54eb56f.patch?full_index=1"
-    sha256 "a4e3fc7c37dac40819d23bd022122c17c783f58dda4345065fec6dca6abce36c"
-  end
-
   patch do # Apple Silicon build fix for gcc-6.5.0 .. gcc-10.3.0
     url "https://github.com/richfelker/musl-cross-make/commit/8d34906.patch?full_index=1"
     sha256 "01b2e0e11aeb33db5d8988d42a517828911601227238d8e7d5d7db8364486c26"
