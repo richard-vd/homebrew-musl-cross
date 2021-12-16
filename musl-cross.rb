@@ -64,9 +64,9 @@ class MuslCross < Formula
     sha256 "75d5d255a2a273b6e651f82eecfabf6cbcd8eaeae70e86b417384c8f4a58d8d3"
   end
 
-  resource "gcc-9.2.0.tar.xz" do
-    url "https://ftp.gnu.org/gnu/gcc/gcc-9.2.0/gcc-9.2.0.tar.xz"
-    sha256 "ea6ef08f121239da5695f76c9b33637a118dcf63e24164422231917fa61fb206"
+  resource "gcc-11.2.0.tar.xz" do
+    url "https://ftp.gnu.org/gnu/gcc/gcc-11.2.0/gcc-11.2.0.tar.xz"
+    sha256 "d08edc536b54c372a1010ff6619dd274c0f1603aa49212ba20f7aa2cda36fa8b"
   end
 
   resource "isl-0.21.tar.bz2" do
@@ -122,6 +122,7 @@ class MuslCross < Formula
 
       # Explicitly enable libisl support to avoid opportunistic linking
       ISL_VER = 0.21
+      GCC_VER = 11.2.0
 
       # https://llvm.org/bugs/show_bug.cgi?id=19650
       # https://github.com/richfelker/musl-cross-make/issues/11
