@@ -79,6 +79,11 @@ class MuslCross < Formula
     sha256 "01b2e0e11aeb33db5d8988d42a517828911601227238d8e7d5d7db8364486c26"
   end
 
+  patch do # Apple Silicon build fix for gcc-11.1.0 + gcc-11.2.0
+    url "https://github.com/richfelker/musl-cross-make/commit/4c633e6e.patch?full_index=1"
+    sha256 "068c69aaafea0f0c244b0e7de132d14c2c00f098f2162f548e4455b7ac08c764"
+  end
+
   patch do # add gcc-11.1.0 hash and patches
     url "https://github.com/richfelker/musl-cross-make/commit/0a242587.patch?full_index=1"
     sha256 "93acc87beb03c40764a7d5633454787c4a49d58fc3a0acec2cab85cbc3416e6d"
