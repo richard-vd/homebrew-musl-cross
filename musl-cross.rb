@@ -4,10 +4,10 @@
 class MuslCross < Formula
   desc "Linux cross compilers based on musl libc"
   homepage "https://github.com/richfelker/musl-cross-make"
-  url "https://github.com/richfelker/musl-cross-make/archive/v0.9.9.tar.gz"
-  sha256 "ff3e2188626e4e55eddcefef4ee0aa5a8ffb490e3124850589bcaf4dd60f5f04"
-  revision 1
-  head "https://github.com/richfelker/musl-cross-make.git"
+  url "https://github.com/richfelker/musl-cross-make/archive/0f22991.zip"
+  version "0.9.9-0f22991"
+  sha256 "5ab95bdfa2a659cab87d9d5b94cc9c7f3fc08d5f70ae1e28941bed423b21f1e3"
+  head "https://github.com/richfelker/musl-cross-make.git", branch: "0f22991"
 
   bottle do
     root_url "https://f001.backblazeb2.com/file/filippo-public"
