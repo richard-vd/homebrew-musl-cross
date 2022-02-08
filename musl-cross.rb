@@ -10,8 +10,9 @@ class MuslCross < Formula
   head "https://github.com/richfelker/musl-cross-make.git", branch: "0f22991"
 
   bottle do
-    root_url "https://f001.backblazeb2.com/file/filippo-public"
-    sha256 cellar: :any_skip_relocation, catalina: "d668fe23ce3a8812204656ddad44ffda599f1515b937879d2ed33f46ec877185"
+    root_url "https://www.itnm.nl/richard-vd/homebrew-musl-cross"
+    sha256 cellar: :any_skip_relocation, monterey: "4170f1e40a31d336a4f31950e1068606cd924c20d8896db17d12de0c29027e9b"
+    sha256 cellar: :any, arm64_monterey: "848d784c1c6adbe0b229f0039faf80e55bab9e2a1c0024248d0eb58651e1ffff"
   end
 
   option "with-aarch64", "Build cross-compilers targeting aarch64-linux-musl"
