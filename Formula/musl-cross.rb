@@ -4,10 +4,10 @@
 class MuslCross < Formula
   desc "Linux cross compilers based on musl libc"
   homepage "https://github.com/jthat/musl-cross-make"
-  url "https://github.com/jthat/musl-cross-make/archive/fc2fcb9.tar.gz"
-  version "0.9.9-fc2fcb9"
-  sha256 "a95418c0d4092a5afe2eb6da89bfb89f8f66e7bc43ba23c3208dd4a126eef07e"
-  head "https://github.com/jthat/musl-cross-make.git", branch: "fc2fcb9"
+  url "https://github.com/jthat/musl-cross-make/archive/cc9682d.tar.gz"
+  version "0.9.9-cc9682d"
+  sha256 "438e70d720093c3dbcb49c0cab281fba5fac938fd32b7861b47fde369c7618c3"
+  head "https://github.com/jthat/musl-cross-make.git", branch: "cc9682d"
 
   option "with-aarch64", "Build cross-compilers targeting aarch64-linux-musl"
   option "with-arm-hf", "Build cross-compilers targeting arm-linux-musleabihf"
@@ -65,9 +65,9 @@ class MuslCross < Formula
     sha256 "61d684f0aa5e76ac6585ad8898a2427aade8979ed5e7f85492286c4dfc13ee86"
   end
 
-  resource "isl-0.24.tar.xz" do
-    url "https://downloads.sourceforge.net/project/libisl/isl-0.24.tar.xz"
-    sha256 "043105cc544f416b48736fff8caf077fb0663a717d06b1113f16e391ac99ebad"
+  resource "isl-0.26.tar.xz" do
+    url "https://downloads.sourceforge.net/project/libisl/isl-0.26.tar.xz"
+    sha256 "a0b5cb06d24f9fa9e77b55fabbe9a3c94a336190345c2555f9915bb38e976504"
   end
 
   def install
@@ -102,7 +102,7 @@ class MuslCross < Formula
       COMMON_CONFIG += --with-debug-prefix-map=#{buildpath}=
 
       # Explicitly enable libisl support to avoid opportunistic linking
-      ISL_VER = 0.24
+      ISL_VER = 0.26
       GCC_VER = 13.1.0
 
       # https://llvm.org/bugs/show_bug.cgi?id=19650
