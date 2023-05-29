@@ -3,17 +3,11 @@
 
 class MuslCross < Formula
   desc "Linux cross compilers based on musl libc"
-  homepage "https://github.com/richfelker/musl-cross-make"
-  url "https://github.com/richfelker/musl-cross-make/archive/0f22991.zip"
-  version "0.9.9-0f22991"
-  sha256 "5ab95bdfa2a659cab87d9d5b94cc9c7f3fc08d5f70ae1e28941bed423b21f1e3"
-  head "https://github.com/richfelker/musl-cross-make.git", branch: "0f22991"
-
-  bottle do
-    root_url "https://www.itnm.nl/richard-vd/homebrew-musl-cross"
-    sha256 cellar: :any_skip_relocation, monterey: "4170f1e40a31d336a4f31950e1068606cd924c20d8896db17d12de0c29027e9b"
-    sha256 cellar: :any, arm64_monterey: "848d784c1c6adbe0b229f0039faf80e55bab9e2a1c0024248d0eb58651e1ffff"
-  end
+  homepage "https://github.com/jthat/musl-cross-make"
+  url "https://github.com/jthat/musl-cross-make/archive/fc2fcb9.zip"
+  version "0.9.9-fc2fcb9"
+  sha256 "a95418c0d4092a5afe2eb6da89bfb89f8f66e7bc43ba23c3208dd4a126eef07e"
+  head "https://github.com/jthat/musl-cross-make.git", branch: "fc2fcb9"
 
   option "with-aarch64", "Build cross-compilers targeting aarch64-linux-musl"
   option "with-arm-hf", "Build cross-compilers targeting arm-linux-musleabihf"
@@ -29,70 +23,51 @@ class MuslCross < Formula
 
   depends_on "gnu-sed" => :build
   depends_on "make" => :build
+  depends_on "bison" => :build
 
-  resource "linux-4.19.88.tar.xz" do
-    url "https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.19.88.tar.xz"
-    sha256 "c1923b6bd166e6dd07be860c15f59e8273aaa8692bc2a1fce1d31b826b9b3fbe"
+  resource "linux-6.1.29.tar.xz" do
+    url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.29.tar.xz"
+    sha256 "1e736cc9bd6036379a1d915e518abd4c2c94ad0fd1ea0da961c3489308b8fcfb"
   end
 
-  resource "mpfr-4.0.2.tar.bz2" do
-    url "https://ftp.gnu.org/gnu/mpfr/mpfr-4.0.2.tar.bz2"
-    sha256 "c05e3f02d09e0e9019384cdd58e0f19c64e6db1fd6f5ecf77b4b1c61ca253acc"
+  resource "mpfr-4.2.0.tar.xz" do
+    url "https://ftp.gnu.org/gnu/mpfr/mpfr-4.2.0.tar.xz"
+    sha256 "06a378df13501248c1b2db5aa977a2c8126ae849a9d9b7be2546fb4a9c26d993"
   end
 
-  resource "mpc-1.1.0.tar.gz" do
-    url "https://ftp.gnu.org/gnu/mpc/mpc-1.1.0.tar.gz"
-    sha256 "6985c538143c1208dcb1ac42cedad6ff52e267b47e5f970183a3e75125b43c2e"
+  resource "mpc-1.3.1.tar.gz" do
+    url "https://ftp.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz"
+    sha256 "ab642492f5cf882b74aa0cb730cd410a81edcdbec895183ce930e706c1c759b8"
   end
 
-  resource "gmp-6.1.2.tar.bz2" do
-    url "https://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.bz2"
-    sha256 "5275bb04f4863a13516b2f39392ac5e272f5e1bb8057b18aec1c9b79d73d8fb2"
+  resource "gmp-6.2.1.tar.xz" do
+    url "https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz"
+    sha256 "fd4829912cddd12f84181c3451cc752be224643e87fac497b69edddadc49b4f2"
   end
 
-  resource "musl-1.2.2.tar.gz" do
-    url "https://www.musl-libc.org/releases/musl-1.2.2.tar.gz"
-    sha256 "9b969322012d796dc23dda27a35866034fa67d8fb67e0e2c45c913c3d43219dd"
+  resource "musl-1.2.4.tar.gz" do
+    url "https://www.musl-libc.org/releases/musl-1.2.4.tar.gz"
+    sha256 "7a35eae33d5372a7c0da1188de798726f68825513b7ae3ebe97aaaa52114f039"
   end
 
-  resource "binutils-2.33.1.tar.bz2" do
-    url "https://ftp.gnu.org/gnu/binutils/binutils-2.33.1.tar.bz2"
-    sha256 "0cb4843da15a65a953907c96bad658283f3c4419d6bcc56bf2789db16306adb2"
+  resource "binutils-2.40.tar.xz" do
+    url "https://ftp.gnu.org/gnu/binutils/binutils-2.40.tar.xz"
+    sha256 "0f8a4c272d7f17f369ded10a4aca28b8e304828e95526da482b0ccc4dfc9d8e1"
   end
 
   resource "config.sub" do
-    url "https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=3d5db9ebe860"
-    sha256 "75d5d255a2a273b6e651f82eecfabf6cbcd8eaeae70e86b417384c8f4a58d8d3"
+    url "https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=63acb96f9247"
+    sha256 "b45ba96fa578cfca60ed16e27e689f10812c3f946535e779229afe7a840763e6"
   end
 
-  resource "gcc-11.2.0.tar.xz" do
-    url "https://ftp.gnu.org/gnu/gcc/gcc-11.2.0/gcc-11.2.0.tar.xz"
-    sha256 "d08edc536b54c372a1010ff6619dd274c0f1603aa49212ba20f7aa2cda36fa8b"
+  resource "gcc-13.1.0.tar.xz" do
+    url "https://ftp.gnu.org/gnu/gcc/gcc-13.1.0/gcc-13.1.0.tar.xz"
+    sha256 "61d684f0aa5e76ac6585ad8898a2427aade8979ed5e7f85492286c4dfc13ee86"
   end
 
-  resource "isl-0.21.tar.bz2" do
-    url "https://downloads.sourceforge.net/project/libisl/isl-0.21.tar.bz2"
-    sha256 "d18ca11f8ad1a39ab6d03d3dcb3365ab416720fcb65b42d69f34f51bf0a0e859"
-  end
-
-  patch do # Apple Silicon build fix for gcc-6.5.0 .. gcc-10.3.0
-    url "https://github.com/richfelker/musl-cross-make/commit/8d34906.patch?full_index=1"
-    sha256 "01b2e0e11aeb33db5d8988d42a517828911601227238d8e7d5d7db8364486c26"
-  end
-
-  patch do # Apple Silicon build fix for gcc-11.1.0 + gcc-11.2.0
-    url "https://github.com/richfelker/musl-cross-make/commit/4c633e6e.patch?full_index=1"
-    sha256 "068c69aaafea0f0c244b0e7de132d14c2c00f098f2162f548e4455b7ac08c764"
-  end
-
-  patch do # add gcc-11.1.0 hash and patches
-    url "https://github.com/richfelker/musl-cross-make/commit/0a242587.patch?full_index=1"
-    sha256 "93acc87beb03c40764a7d5633454787c4a49d58fc3a0acec2cab85cbc3416e6d"
-  end
-
-  patch do # add gcc-11.2.0 hash and patches
-    url "https://github.com/richfelker/musl-cross-make/commit/5157b369.patch?full_index=1"
-    sha256 "db203755c0ff0d1908e2e36c16fc44e3ef33a066b88a2fd8819cdd9cb046e227"
+  resource "isl-0.24.tar.xz" do
+    url "https://downloads.sourceforge.net/project/libisl/isl-0.24.tar.xz"
+    sha256 "043105cc544f416b48736fff8caf077fb0663a717d06b1113f16e391ac99ebad"
   end
 
   def install
@@ -127,8 +102,8 @@ class MuslCross < Formula
       COMMON_CONFIG += --with-debug-prefix-map=#{buildpath}=
 
       # Explicitly enable libisl support to avoid opportunistic linking
-      ISL_VER = 0.21
-      GCC_VER = 11.2.0
+      ISL_VER = 0.24
+      GCC_VER = 13.1.0
 
       # https://llvm.org/bugs/show_bug.cgi?id=19650
       # https://github.com/richfelker/musl-cross-make/issues/11
