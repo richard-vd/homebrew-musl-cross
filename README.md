@@ -2,6 +2,10 @@
 
 **One-click static-friendly musl-based GCC macOS-to-Linux cross-compilers**
 
+Based on [FiloSottile/homebrew-musl-cross](https://github.com/FiloSottile/homebrew-musl-cross).
+
+Depends on [jthat/musl-cross-make](https://github.com/jthat/musl-cross-make) to do the heavy lifting, which is in turn based on [richfelker/musl-cross-make](https://github.com/richfelker/musl-cross-make).
+
 ```
 brew install jthat/musl-cross/musl-cross
 ```
