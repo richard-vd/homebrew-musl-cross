@@ -4,7 +4,7 @@
 class MuslCross < Formula
   desc "Linux cross compilers based on musl libc"
   homepage "https://github.com/jthat/musl-cross-make"
-  url "https://github.com/jthat/musl-cross-make/archive/fc2fcb9.zip"
+  url "https://github.com/jthat/musl-cross-make/archive/fc2fcb9.tar.gz"
   version "0.9.9-fc2fcb9"
   sha256 "a95418c0d4092a5afe2eb6da89bfb89f8f66e7bc43ba23c3208dd4a126eef07e"
   head "https://github.com/jthat/musl-cross-make.git", branch: "fc2fcb9"
@@ -21,9 +21,9 @@ class MuslCross < Formula
   option "with-powerpc-sf", "Build cross-compilers targeting powerpc-linux-muslsf"
   option "without-x86_64", "Do not build cross-compilers targeting x86_64-linux-musl"
 
+  depends_on "bison" => :build
   depends_on "gnu-sed" => :build
   depends_on "make" => :build
-  depends_on "bison" => :build
 
   resource "linux-6.1.29.tar.xz" do
     url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.29.tar.xz"
