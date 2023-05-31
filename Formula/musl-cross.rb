@@ -22,8 +22,9 @@ class MuslCross < Formula
   option "without-x86_64", "Do not build cross-compilers targeting x86_64-linux-musl"
 
   depends_on "bison" => :build
-  depends_on "flex" => :build
   depends_on "make" => :build
+
+  uses_from_macos "flex" => :build
 
   on_macos do
     depends_on "gnu-sed" => :build
