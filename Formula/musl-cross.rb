@@ -4,10 +4,10 @@
 class MuslCross < Formula
   desc "Linux cross compilers based on musl libc"
   homepage "https://github.com/jthat/musl-cross-make"
-  url "https://github.com/jthat/musl-cross-make/archive/f2313df.tar.gz"
-  version "0.9.9-f2313df"
-  sha256 "cc566f2284ee2ad11de968b8a2587c63a1b513aa0ff9c55c6c1b126d33778c2e"
-  head "https://github.com/jthat/musl-cross-make.git", branch: "f2313df"
+  url "https://github.com/jthat/musl-cross-make/archive/d1993a6.tar.gz"
+  version "0.9.9-d1993a6"
+  sha256 "12256deee0f9ad50eb7ffa81af22c252f4953c1423e9011fe3acdb025a0ce43d"
+  head "https://github.com/jthat/musl-cross-make.git", branch: "d1993a6"
 
   option "with-aarch64", "Build cross-compilers targeting aarch64-linux-musl"
   option "with-arm-hf", "Build cross-compilers targeting arm-linux-musleabihf"
@@ -29,9 +29,9 @@ class MuslCross < Formula
     depends_on "gnu-sed" => :build
   end
 
-  resource "linux-6.1.30.tar.xz" do
-    url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.30.tar.xz"
-    sha256 "1bf254c4ca9ebccb25328296584fb5e87ad635ae0c1cc1deb0b5bb37a4608813"
+  resource "linux-6.1.31.tar.xz" do
+    url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.31.tar.xz"
+    sha256 "e86917bba1990e967943645484182a64ba325f98b114a1906cc1d50992e073c1"
   end
 
   resource "mpfr-4.2.0.tar.xz" do
