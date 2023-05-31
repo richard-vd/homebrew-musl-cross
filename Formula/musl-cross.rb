@@ -22,8 +22,12 @@ class MuslCross < Formula
   option "without-x86_64", "Do not build cross-compilers targeting x86_64-linux-musl"
 
   depends_on "bison" => :build
-  depends_on "gnu-sed" => :build
+  depends_on "flex" => :build
   depends_on "make" => :build
+
+  on_macos do
+    depends_on "gnu-sed" => :build
+  end
 
   resource "linux-6.1.29.tar.xz" do
     url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.29.tar.xz"
@@ -112,9 +116,14 @@ class MuslCross < Formula
       endif
     EOS
 
-    ENV.prepend_path "PATH", "#{Formula["gnu-sed"].opt_libexec}/gnubin"
+    if OS.mac?
+      ENV.prepend_path "PATH", "#{Formula["gnu-sed"].opt_libexec}/gnubin"
+      make = Formula["make"].opt_bin/"gmake"
+    else
+      make = "make"
+    end
     targets.each do |target|
-      system Formula["make"].opt_bin/"gmake", "install", "TARGET=#{target}"
+      system make, "install", "TARGET=#{target}"
     end
 
     bin.install_symlink Dir["#{libexec}/bin/*"]
