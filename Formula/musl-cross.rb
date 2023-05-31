@@ -121,6 +121,23 @@ class MuslCross < Formula
       make = Formula["make"].opt_bin/"gmake"
     else
       make = "make"
+
+      # Linux build fails because gprofng finds Java SDK
+      # https://github.com/jthat/homebrew-musl-cross/issues/6
+      begin
+        # Cause binutils gprofng to find a fake jdk, and thus disable Java profiling support
+        fakejdk_bin = buildpath/"fakejdk/bin"
+        fakejdk_bin.mkpath
+        %w[javac java].each do |b|
+          (fakejdk_bin/b).write <<~EOS
+            #!/bin/sh
+            exit 1
+          EOS
+          chmod "+x", fakejdk_bin/b
+        end
+        ENV.prepend_path "PATH", fakejdk_bin
+      end
+
     end
     targets.each do |target|
       system make, "install", "TARGET=#{target}"
