@@ -109,10 +109,13 @@ class MuslCross < Formula
       ISL_VER = 0.26
       GCC_VER = 13.1.0
 
+      ifeq ($(shell $(CXX) -v 2>&1 | grep -c "clang"), 1)
       # https://llvm.org/bugs/show_bug.cgi?id=19650
       # https://github.com/richfelker/musl-cross-make/issues/11
-      ifeq ($(shell $(CXX) -v 2>&1 | grep -c "clang"), 1)
       TOOLCHAIN_CONFIG += CXX="$(CXX) -fbracket-depth=512"
+      # macOS build fails with isl 0.26
+      # https://github.com/jthat/homebrew-musl-cross/issues/9
+      TOOLCHAIN_CONFIG += CXX="$(CXX) -std=gnu++17"
       endif
     EOS
 
