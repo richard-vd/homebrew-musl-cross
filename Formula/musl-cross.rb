@@ -29,9 +29,9 @@ class MuslCross < Formula
     depends_on "gnu-sed" => :build
   end
 
-  resource "linux-6.1.29.tar.xz" do
-    url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.29.tar.xz"
-    sha256 "1e736cc9bd6036379a1d915e518abd4c2c94ad0fd1ea0da961c3489308b8fcfb"
+  resource "linux-6.1.30.tar.xz" do
+    url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.30.tar.xz"
+    sha256 "1bf254c4ca9ebccb25328296584fb5e87ad635ae0c1cc1deb0b5bb37a4608813"
   end
 
   resource "mpfr-4.2.0.tar.xz" do
