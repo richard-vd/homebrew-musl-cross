@@ -31,7 +31,7 @@ class MuslCross < Formula
     "s390x"     => "s390x-linux-musl",
   }.freeze
 
-  DEFAULT_TARGETS = %w[armhf aarch64 x86_64].freeze
+  DEFAULT_TARGETS = %w[x86_64].freeze
 
   OPTION_TARGET_MAP.each do |option, target|
     if DEFAULT_TARGETS.include? option
