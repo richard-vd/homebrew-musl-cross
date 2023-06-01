@@ -2,7 +2,11 @@
 # frozen_string_literal: true
 
 class MuslCross < Formula
-  desc "Linux cross compilers based on musl libc"
+  GCC_VER      = "13.1.0"
+  BINUTILS_VER = "2.40"
+  MUSL_VER     = "1.2.4"
+
+  desc "Linux cross compilers based on gcc and musl libc"
   homepage "https://github.com/jthat/musl-cross-make"
   url "https://github.com/jthat/musl-cross-make/archive/d1993a6.tar.gz"
   version "0.9.9-d1993a6"
@@ -21,60 +25,42 @@ class MuslCross < Formula
   option "with-powerpc-sf", "Build cross-compilers targeting powerpc-linux-muslsf"
   option "without-x86_64", "Do not build cross-compilers targeting x86_64-linux-musl"
 
-  depends_on "bison" => :build
-  depends_on "make" => :build
+  depends_on "bison"   => :build
+  depends_on "gnu-sed" => :build
+  depends_on "make"    => :build
+
+  depends_on "gmp"
+  depends_on "isl"
+  depends_on "libmpc"
+  depends_on "mpfr"
   depends_on "zstd"
 
   uses_from_macos "flex" => :build
   uses_from_macos "zlib"
-
-  on_macos do
-    depends_on "gnu-sed" => :build
-  end
 
   resource "linux-6.1.31.tar.xz" do
     url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.31.tar.xz"
     sha256 "e86917bba1990e967943645484182a64ba325f98b114a1906cc1d50992e073c1"
   end
 
-  resource "mpfr-4.2.0.tar.xz" do
-    url "https://ftp.gnu.org/gnu/mpfr/mpfr-4.2.0.tar.xz"
-    sha256 "06a378df13501248c1b2db5aa977a2c8126ae849a9d9b7be2546fb4a9c26d993"
+  resource "gcc-#{GCC_VER}.tar.xz" do
+    url "https://ftp.gnu.org/gnu/gcc/gcc-#{GCC_VER}/gcc-#{GCC_VER}.tar.xz"
+    sha256 "61d684f0aa5e76ac6585ad8898a2427aade8979ed5e7f85492286c4dfc13ee86"
   end
 
-  resource "mpc-1.3.1.tar.gz" do
-    url "https://ftp.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz"
-    sha256 "ab642492f5cf882b74aa0cb730cd410a81edcdbec895183ce930e706c1c759b8"
-  end
-
-  resource "gmp-6.2.1.tar.xz" do
-    url "https://ftp.gnu.org/gnu/gmp/gmp-6.2.1.tar.xz"
-    sha256 "fd4829912cddd12f84181c3451cc752be224643e87fac497b69edddadc49b4f2"
-  end
-
-  resource "musl-1.2.4.tar.gz" do
-    url "https://www.musl-libc.org/releases/musl-1.2.4.tar.gz"
-    sha256 "7a35eae33d5372a7c0da1188de798726f68825513b7ae3ebe97aaaa52114f039"
-  end
-
-  resource "binutils-2.40.tar.xz" do
-    url "https://ftp.gnu.org/gnu/binutils/binutils-2.40.tar.xz"
+  resource "binutils-#{BINUTILS_VER}.tar.xz" do
+    url "https://ftp.gnu.org/gnu/binutils/binutils-#{BINUTILS_VER}.tar.xz"
     sha256 "0f8a4c272d7f17f369ded10a4aca28b8e304828e95526da482b0ccc4dfc9d8e1"
+  end
+
+  resource "musl-#{MUSL_VER}.tar.gz" do
+    url "https://www.musl-libc.org/releases/musl-#{MUSL_VER}.tar.gz"
+    sha256 "7a35eae33d5372a7c0da1188de798726f68825513b7ae3ebe97aaaa52114f039"
   end
 
   resource "config.sub" do
     url "https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=63acb96f9247"
     sha256 "b45ba96fa578cfca60ed16e27e689f10812c3f946535e779229afe7a840763e6"
-  end
-
-  resource "gcc-13.1.0.tar.xz" do
-    url "https://ftp.gnu.org/gnu/gcc/gcc-13.1.0/gcc-13.1.0.tar.xz"
-    sha256 "61d684f0aa5e76ac6585ad8898a2427aade8979ed5e7f85492286c4dfc13ee86"
-  end
-
-  resource "isl-0.26.tar.xz" do
-    url "https://downloads.sourceforge.net/project/libisl/isl-0.26.tar.xz"
-    sha256 "a0b5cb06d24f9fa9e77b55fabbe9a3c94a336190345c2555f9915bb38e976504"
   end
 
   def install
@@ -100,6 +86,28 @@ class MuslCross < Formula
       SOURCES = #{buildpath/"resources"}
       OUTPUT = #{libexec}
 
+      # Versions
+      BINUTILS_VER = #{BINUTILS_VER}
+      GCC_VER  = #{GCC_VER}
+      MUSL_VER = #{MUSL_VER}
+
+      # Use libs from Homebrew
+      GMP_VER  =
+      MPC_VER  =
+      MPFR_VER =
+      ISL_VER  =
+      COMMON_CONFIG += --with-gmp=#{Formula["gmp"].opt_prefix}
+      COMMON_CONFIG += --with-mpc=#{Formula["libmpc"].opt_prefix}
+      COMMON_CONFIG += --with-mpfr=#{Formula["mpfr"].opt_prefix}
+      COMMON_CONFIG += --with-isl=#{Formula["isl"].opt_prefix}
+      COMMON_CONFIG += --with-zstd=#{Formula["zstd"].opt_prefix}
+      COMMON_CONFIG += --with-system-zlib
+
+      # Release build options
+      COMMON_CONFIG += --enable-checking=release
+      COMMON_CONFIG += --with-pkgversion="Homebrew GCC #{pkg_version} musl cross"
+      COMMON_CONFIG += --with-bugurl="https://github.com/jthat/homebrew-musl-cross/issues"
+
       # Drop some features for faster and smaller builds
       COMMON_CONFIG += --disable-nls
       GCC_CONFIG += --disable-libquadmath --disable-decimal-float
@@ -108,20 +116,10 @@ class MuslCross < Formula
       # Keep the local build path out of binaries and libraries
       COMMON_CONFIG += --with-debug-prefix-map=#{buildpath}=
 
-      GCC_CONFIG += --with-system-zlib --with-zstd=#{Formula["zstd"].opt_prefix}
-      BINUTILS_CONFIG += --with-system-zlib --with-zstd=#{Formula["zstd"].opt_prefix}
-
-      # Explicitly enable libisl support to avoid opportunistic linking
-      ISL_VER = 0.26
-      GCC_VER = 13.1.0
-
-      ifeq ($(shell $(CXX) -v 2>&1 | grep -c "clang"), 1)
       # https://llvm.org/bugs/show_bug.cgi?id=19650
       # https://github.com/richfelker/musl-cross-make/issues/11
+      ifeq ($(shell $(CXX) -v 2>&1 | grep -c "clang"), 1)
       TOOLCHAIN_CONFIG += CXX="$(CXX) -fbracket-depth=512"
-      # macOS build fails with isl 0.26
-      # https://github.com/jthat/homebrew-musl-cross/issues/9
-      TOOLCHAIN_CONFIG += CXX="$(CXX) -std=gnu++17"
       endif
     EOS
 
