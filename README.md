@@ -1,36 +1,51 @@
 # homebrew-musl-cross
 
-**One-click static-friendly musl-based GCC macOS-to-Linux cross-compilers**
+[Homebrew](https://brew.sh/) package manager formula to install cross-compiler toolchains targeting Linux boxes.
 
-Based on [FiloSottile/homebrew-musl-cross](https://github.com/FiloSottile/homebrew-musl-cross).
+The default installation contains toolchains for x86 64-bit Linux (`x86_64-linux-musl`) and ARM 32/64-bit Linux (`arm-linux-musleabihf`/`aarch64-linux-musl`) as used on Raspberry Pi and similar devices. Others can be installed with package options (see `brew info`).
+
+Note, when using the toolchain, the generated binaries will only run on a system with `musl` libc installed. Either musl-based distributions like Alpine Linux or distributions having `musl` libc installed as separate packages (e.g., Debian/Ubuntu).
+
+Binaries statically linked with `musl` libc (linked with `-static`) have no external dependencies, even for features like DNS lookups or character set conversions that are implemented with dynamic loading on glibc. The application can be deployed as a single binary file and run on any device with the appropriate ISA and Linux kernel or Linux syscall ABI emulation layer including bare docker containers.
+
+**Tool Versions:**
+- [Linux](https://kernel.org/) 6.1.31
+- [GCC](https://gcc.gnu.org/) 13.1.0
+- [binutils](https://www.gnu.org/software/binutils/) 2.40
+- [musl libc](https://www.musl-libc.org/) 1.2.4
+
+Partially based on:
+ - [FiloSottile/homebrew-musl-cross](https://github.com/FiloSottile/homebrew-musl-cross)
+ - [MarioSchwalbe/homebrew-gcc-musl-cross](https://github.com/MarioSchwalbe/homebrew-gcc-musl-cross)
 
 Depends on [jthat/musl-cross-make](https://github.com/jthat/musl-cross-make) to do the heavy lifting, which is in turn based on [richfelker/musl-cross-make](https://github.com/richfelker/musl-cross-make).
 
-```
-brew install jthat/musl-cross/musl-cross
-```
 
-By default it will build a full cross compiler toolchain targeting musl Linux amd64.
+# Usage
 
-You can then use `x86_64-linux-musl-` versions of the tools to build for the target.
-For example `x86_64-linux-musl-cc` will compile C code to run on musl Linux amd64.
+1. Install with Homebrew:
+    ```sh
+    $ brew tap jthat/musl-cross
+    $ brew install musl-cross
+    ```
 
-The "musl" part of the target is important: the binaries will ONLY run on a musl-based system, like Alpine.
-However, if you build them as static binaries by passing `-static` as an LDFLAG they will run **anywhere**.
-Musl is specifically engineered to support static binaries.
+2. For dynamically linked applications, ensure the correct version of `musl` is installed on the target device.
 
-Other architectures are supported. For example you can build a Raspberry Pi cross-compiler:
+3. Compile with `<TARGET>-gcc` e.g., `x86_64-linux-musl-gcc`, deploy, and run.
 
-```
-brew install jthat/musl-cross/musl-cross --without-x86_64 --with-arm-hf
-```
 
-You can also use `--with-i486` (x86 32-bit), `--with-aarch64` (ARM 64-bit), `--with-arm` (ARM soft-float), `--with-mips` and `--with-powerpc`.
+# Supported Targets
 
-(Note: a custom build can take up to several hours and gigabytes of disk space, depending on the selected architectures and on the host CPU. The default installed size is between 200MB and 300MB.)
+- `i686-linux-musl`
+- `x86_64-linux-musl`
+- `x86_64-linux-muslx32`
+- `arm-linux-musleabi`
+- `arm-linux-musleabihf`
+- `aarch64-linux-musl`
+- `mips-linux-musl`
+- `mips64-linux-musl`
+- `powerpc-linux-musl`
+- `powerpc64-linux-musl`
+- `s390x-linux-musl`
 
-If you encounter issues with a missing `musl-gcc` binary, the build system might be [assuming the presence of the musl host compiler wrapper](https://github.com/FiloSottile/homebrew-musl-cross/issues/16). That should be reported as an issue, but you might be able to workaround it by creating a symlink:
-
-```
-ln -s /usr/local/opt/musl-cross/bin/x86_64-linux-musl-gcc /usr/local/bin/musl-gcc
-```
+Other targets or variants can be added easily by extending the hash `OPTION_TARGET_MAP` in the formula as long as `musl-cross-make` and `musl` libc also support them.

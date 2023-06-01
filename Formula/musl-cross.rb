@@ -2,28 +2,46 @@
 # frozen_string_literal: true
 
 class MuslCross < Formula
-  GCC_VER      = "13.1.0"
-  BINUTILS_VER = "2.40"
-  MUSL_VER     = "1.2.4"
+  CROSSMAKE_REV = "d1993a6"
+
+  LINUX_VER      = "6.1.31"
+  GCC_VER        = "13.1.0"
+  BINUTILS_VER   = "2.40"
+  MUSL_VER       = "1.2.4"
+  CONFIG_SUB_REV = "63acb96f9247"
 
   desc "Linux cross compilers based on gcc and musl libc"
   homepage "https://github.com/jthat/musl-cross-make"
-  url "https://github.com/jthat/musl-cross-make/archive/d1993a6.tar.gz"
-  version "0.9.9-d1993a6"
+  url "https://github.com/jthat/musl-cross-make/archive/#{CROSSMAKE_REV}.tar.gz"
+  version "0.9.9-#{CROSSMAKE_REV}"
   sha256 "12256deee0f9ad50eb7ffa81af22c252f4953c1423e9011fe3acdb025a0ce43d"
-  head "https://github.com/jthat/musl-cross-make.git", branch: "d1993a6"
+  head "https://github.com/jthat/musl-cross-make.git", branch: CROSSMAKE_REV
 
-  option "with-aarch64", "Build cross-compilers targeting aarch64-linux-musl"
-  option "with-arm-hf", "Build cross-compilers targeting arm-linux-musleabihf"
-  option "with-arm", "Build cross-compilers targeting arm-linux-musleabi"
-  option "with-i486", "Build cross-compilers targeting i486-linux-musl"
-  option "with-mips", "Build cross-compilers targeting mips-linux-musl"
-  option "with-mipsel", "Build cross-compilers targeting mipsel-linux-musl"
-  option "with-mips64", "Build cross-compilers targeting mips64-linux-musl"
-  option "with-mips64el", "Build cross-compilers targeting mips64el-linux-musl"
-  option "with-powerpc", "Build cross-compilers targeting powerpc-linux-musl"
-  option "with-powerpc-sf", "Build cross-compilers targeting powerpc-linux-muslsf"
-  option "without-x86_64", "Do not build cross-compilers targeting x86_64-linux-musl"
+  OPTION_TARGET_MAP = {
+    "x86"       => "i686-linux-musl",
+    "x86_64"    => "x86_64-linux-musl",
+    "x86_64x32" => "x86_64-linux-muslx32",
+    "aarch64"   => "aarch64-linux-musl",
+    "arm"       => "arm-linux-musleabi",
+    "armhf"     => "arm-linux-musleabihf",
+    "mips"      => "mips-linux-musl",
+    "mips64"    => "mips64-linux-musl",
+    "powerpc"   => "powerpc-linux-musl",
+    "powerpc64" => "powerpc64-linux-musl",
+    "s390x"     => "s390x-linux-musl",
+  }.freeze
+
+  DEFAULT_TARGETS = %w[armhf aarch64 x86_64].freeze
+
+  OPTION_TARGET_MAP.each do |option, target|
+    if DEFAULT_TARGETS.include? option
+      option "without-#{option}", "Do not build cross-compilers for #{target}"
+    else
+      option "with-#{option}", "Build cross-compilers for #{target}"
+    end
+  end
+
+  option "with-all-targets", "Build cross-compilers for all targets"
 
   depends_on "bison"   => :build
   depends_on "gnu-sed" => :build
@@ -38,8 +56,8 @@ class MuslCross < Formula
   uses_from_macos "flex" => :build
   uses_from_macos "zlib"
 
-  resource "linux-6.1.31.tar.xz" do
-    url "https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.1.31.tar.xz"
+  resource "linux-#{LINUX_VER}.tar.xz" do
+    url "https://cdn.kernel.org/pub/linux/kernel/v#{LINUX_VER.sub(/^([^.])\..*$/, '\1')}.x/linux-#{LINUX_VER}.tar.xz"
     sha256 "e86917bba1990e967943645484182a64ba325f98b114a1906cc1d50992e073c1"
   end
 
@@ -59,68 +77,73 @@ class MuslCross < Formula
   end
 
   resource "config.sub" do
-    url "https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=63acb96f9247"
+    url "https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=#{CONFIG_SUB_REV}"
     sha256 "b45ba96fa578cfca60ed16e27e689f10812c3f946535e779229afe7a840763e6"
   end
 
   def install
     targets = []
-    targets.push "x86_64-linux-musl" if build.with? "x86_64"
-    targets.push "aarch64-linux-musl" if build.with? "aarch64"
-    targets.push "arm-linux-musleabihf" if build.with? "arm-hf"
-    targets.push "arm-linux-musleabi" if build.with? "arm"
-    targets.push "i486-linux-musl" if build.with? "i486"
-    targets.push "mips-linux-musl" if build.with? "mips"
-    targets.push "mipsel-linux-musl" if build.with? "mipsel"
-    targets.push "mips64-linux-musl" if build.with? "mips64"
-    targets.push "mips64el-linux-musl" if build.with? "mips64el"
-    targets.push "powerpc-linux-musl" if build.with? "powerpc"
-    targets.push "powerpc-linux-muslsf" if build.with? "powerpc-sf"
+    OPTION_TARGET_MAP.each do |option, target|
+      targets.push target if build.with?(option) || build.with?("all-targets")
+    end
 
     (buildpath/"resources").mkpath
     resources.each do |resource|
       cp resource.fetch, buildpath/"resources"/resource.name
     end
 
+    languages = %w[c c++]
+
+    pkgversion = "Homebrew GCC musl cross #{pkg_version} #{build.used_options*" "}".strip
+    bugurl = "https://github.com/jthat/homebrew-musl-cross/issues"
+
+    common_config = %W[
+      --disable-nls
+      --enable-checking=release
+      --enable-languages=#{languages.join(",")}
+      --with-gmp=#{Formula["gmp"].opt_prefix}
+      --with-mpfr=#{Formula["mpfr"].opt_prefix}
+      --with-mpc=#{Formula["libmpc"].opt_prefix}
+      --with-isl=#{Formula["isl"].opt_prefix}
+      --with-zstd=#{Formula["zstd"].opt_prefix}
+      --with-system-zlib
+      --with-pkgversion=#{pkgversion}
+      --with-bugurl=#{bugurl}
+      --with-debug-prefix-map=#{buildpath}=
+    ]
+
+    gcc_config = %w[
+      --disable-libquadmath
+      --disable-decimal-float
+      --disable-libitm
+      --disable-fixed-point
+    ]
+
     (buildpath/"config.mak").write <<~EOS
       SOURCES = #{buildpath/"resources"}
       OUTPUT = #{libexec}
 
       # Versions
+      LINUX_VER = #{LINUX_VER}
       BINUTILS_VER = #{BINUTILS_VER}
       GCC_VER  = #{GCC_VER}
       MUSL_VER = #{MUSL_VER}
+      CONFIG_SUB_REV = #{CONFIG_SUB_REV}
 
       # Use libs from Homebrew
       GMP_VER  =
       MPC_VER  =
       MPFR_VER =
       ISL_VER  =
-      COMMON_CONFIG += --with-gmp=#{Formula["gmp"].opt_prefix}
-      COMMON_CONFIG += --with-mpc=#{Formula["libmpc"].opt_prefix}
-      COMMON_CONFIG += --with-mpfr=#{Formula["mpfr"].opt_prefix}
-      COMMON_CONFIG += --with-isl=#{Formula["isl"].opt_prefix}
-      COMMON_CONFIG += --with-zstd=#{Formula["zstd"].opt_prefix}
-      COMMON_CONFIG += --with-system-zlib
-
-      # Release build options
-      COMMON_CONFIG += --enable-checking=release
-      COMMON_CONFIG += --with-pkgversion="Homebrew GCC #{pkg_version} musl cross"
-      COMMON_CONFIG += --with-bugurl="https://github.com/jthat/homebrew-musl-cross/issues"
-
-      # Drop some features for faster and smaller builds
-      COMMON_CONFIG += --disable-nls
-      GCC_CONFIG += --disable-libquadmath --disable-decimal-float
-      GCC_CONFIG += --disable-libitm --disable-fixed-point
-
-      # Keep the local build path out of binaries and libraries
-      COMMON_CONFIG += --with-debug-prefix-map=#{buildpath}=
 
       # https://llvm.org/bugs/show_bug.cgi?id=19650
       # https://github.com/richfelker/musl-cross-make/issues/11
       ifeq ($(shell $(CXX) -v 2>&1 | grep -c "clang"), 1)
       TOOLCHAIN_CONFIG += CXX="$(CXX) -fbracket-depth=512"
       endif
+
+      #{common_config.map { |o| "COMMON_CONFIG += #{o}\n" }.join}
+      #{gcc_config.map { |o| "GCC_CONFIG += #{o}\n" }.join}
     EOS
 
     if OS.mac?
@@ -153,26 +176,49 @@ class MuslCross < Formula
     bin.install_symlink Dir["#{libexec}/bin/*"]
   end
 
-  test do
-    (testpath/"hello.c").write <<~EOS
-      #include <stdio.h>
+  TEST_OPTION_MAP = {
+    "readelf" => ["-a"],
+    "objdump" => ["-ldSC"],
+    "strings" => [],
+    "size"    => [],
+    "nm"      => [],
+    "strip"   => [],
+  }.freeze
 
-      int main()
-      {
-          printf("Hello, world!");
+  test do
+    ENV.clear
+
+    (testpath/"hello.c").write <<-EOS
+      #include <stdio.h>
+      int main(void) {
+          puts("Hello World!");
+          return 0;
       }
     EOS
 
-    system "#{bin}/x86_64-linux-musl-cc", (testpath/"hello.c") if build.with? "x86_64"
-    system "#{bin}/i486-linux-musl-cc", (testpath/"hello.c") if build.with? "i486"
-    system "#{bin}/aarch64-linux-musl-cc", (testpath/"hello.c") if build.with? "aarch64"
-    system "#{bin}/arm-linux-musleabihf-cc", (testpath/"hello.c") if build.with? "arm-hf"
-    system "#{bin}/arm-linux-musleabi-cc", (testpath/"hello.c") if build.with? "arm"
-    system "#{bin}/mips-linux-musl-cc", (testpath/"hello.c") if build.with? "mips"
-    system "#{bin}/mipsel-linux-musl-cc", (testpath/"hello.c") if build.with? "mipsel"
-    system "#{bin}/mips64-linux-musl-cc", (testpath/"hello.c") if build.with? "mips64"
-    system "#{bin}/mips64el-linux-musl-cc", (testpath/"hello.c") if build.with? "mips64el"
-    system "#{bin}/powerpc-linux-musl-cc", (testpath/"hello.c") if build.with? "powerpc"
-    system "#{bin}/powerpc-linux-muslsf-cc", (testpath/"hello.c") if build.with? "powerpc-sf"
+    (testpath/"hello.cpp").write <<-EOS
+      #include <iostream>
+      int main(void) {
+          std::cout << "Hello World!" << std::endl;
+          return 0;
+      }
+    EOS
+
+    OPTION_TARGET_MAP.each do |option, target|
+      next if build.without?(option) && build.without?("all-targets")
+
+      test_prog = "hello-#{target}"
+      system bin/"#{target}-cc", "-O2", "hello.c", "-o", test_prog
+      assert_predicate testpath/test_prog, :exist?
+      TEST_OPTION_MAP.each do |prog, options|
+        system bin/"#{target}-#{prog}", *options, test_prog
+      end
+
+      system bin/"#{target}-c++", "-O2", "hello.cpp", "-o", test_prog
+      assert_predicate testpath/test_prog, :exist?
+      TEST_OPTION_MAP.each do |prog, options|
+        system bin/"#{target}-#{prog}", *options, test_prog
+      end
+    end
   end
 end
