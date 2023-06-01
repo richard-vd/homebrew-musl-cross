@@ -9,7 +9,7 @@ Note, when using the toolchain, the generated binaries will only run on a system
 Binaries statically linked with `musl` libc (linked with `-static`) have no external dependencies, even for features like DNS lookups or character set conversions that are implemented with dynamic loading on glibc. The application can be deployed as a single binary file and run on any device with the appropriate ISA and Linux kernel or Linux syscall ABI emulation layer including bare docker containers.
 
 **Tool Versions:**
-- [Linux](https://kernel.org/) 6.1.31
+- [Linux](https://kernel.org/) 4.19.284
 - [GCC](https://gcc.gnu.org/) 13.1.0
 - [binutils](https://www.gnu.org/software/binutils/) 2.40
 - [musl libc](https://www.musl-libc.org/) 1.2.4

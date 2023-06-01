@@ -2,9 +2,9 @@
 # frozen_string_literal: true
 
 class MuslCross < Formula
-  CROSSMAKE_REV = "d1993a6"
+  CROSSMAKE_REV = "0689172"
 
-  LINUX_VER      = "6.1.31"
+  LINUX_VER      = "4.19.284"
   GCC_VER        = "13.1.0"
   BINUTILS_VER   = "2.40"
   MUSL_VER       = "1.2.4"
@@ -14,7 +14,7 @@ class MuslCross < Formula
   homepage "https://github.com/jthat/musl-cross-make"
   url "https://github.com/jthat/musl-cross-make/archive/#{CROSSMAKE_REV}.tar.gz"
   version "0.9.9-#{CROSSMAKE_REV}"
-  sha256 "12256deee0f9ad50eb7ffa81af22c252f4953c1423e9011fe3acdb025a0ce43d"
+  sha256 "8eed14000fdf4ab61a309e294eb482724e322dac82d9496541c1ae4f76552a16"
   head "https://github.com/jthat/musl-cross-make.git", branch: CROSSMAKE_REV
 
   OPTION_TARGET_MAP = {
@@ -58,7 +58,7 @@ class MuslCross < Formula
 
   resource "linux-#{LINUX_VER}.tar.xz" do
     url "https://cdn.kernel.org/pub/linux/kernel/v#{LINUX_VER.sub(/^([^.])\..*$/, '\1')}.x/linux-#{LINUX_VER}.tar.xz"
-    sha256 "e86917bba1990e967943645484182a64ba325f98b114a1906cc1d50992e073c1"
+    sha256 "7fb9ee20c7e52f9be6d9f501e8498a22f4b364abfde136143749a77e597fd03e"
   end
 
   resource "gcc-#{GCC_VER}.tar.xz" do
