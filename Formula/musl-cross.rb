@@ -23,8 +23,10 @@ class MuslCross < Formula
 
   depends_on "bison" => :build
   depends_on "make" => :build
+  depends_on "zstd"
 
   uses_from_macos "flex" => :build
+  uses_from_macos "zlib"
 
   on_macos do
     depends_on "gnu-sed" => :build
@@ -105,6 +107,9 @@ class MuslCross < Formula
 
       # Keep the local build path out of binaries and libraries
       COMMON_CONFIG += --with-debug-prefix-map=#{buildpath}=
+
+      GCC_CONFIG += --with-system-zlib --with-zstd=#{Formula["zstd"].opt_prefix}
+      BINUTILS_CONFIG += --with-system-zlib --with-zstd=#{Formula["zstd"].opt_prefix}
 
       # Explicitly enable libisl support to avoid opportunistic linking
       ISL_VER = 0.26
