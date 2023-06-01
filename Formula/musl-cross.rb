@@ -4,6 +4,12 @@
 class MuslCross < Formula
   CROSSMAKE_REV = "0689172"
 
+  bottle do
+    root_url "https://github.com/jthat/homebrew-musl-cross/releases/download/musl-cross-0.9.9-0689172"
+    sha256 cellar: :any,                 ventura:      "3577d8d4ee37982e7f83dba72a443cb4d249640e9780035bdd27e7552968e44f"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "09aa57be48103aefc008e0c32d28f746949ab13cecec1f732a025bffd820111b"
+  end
+
   LINUX_VER      = "4.19.284"
   GCC_VER        = "13.1.0"
   BINUTILS_VER   = "2.40"
