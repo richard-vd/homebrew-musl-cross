@@ -2,14 +2,6 @@
 # frozen_string_literal: true
 
 class MuslCross < Formula
-  CROSSMAKE_REV = "0689172"
-
-  bottle do
-    root_url "https://github.com/jthat/homebrew-musl-cross/releases/download/musl-cross-0.9.9-0689172"
-    sha256 cellar: :any,                 ventura:      "3577d8d4ee37982e7f83dba72a443cb4d249640e9780035bdd27e7552968e44f"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "09aa57be48103aefc008e0c32d28f746949ab13cecec1f732a025bffd820111b"
-  end
-
   LINUX_VER      = "4.19.284"
   GCC_VER        = "13.1.0"
   BINUTILS_VER   = "2.40"
@@ -18,10 +10,9 @@ class MuslCross < Formula
 
   desc "Linux cross compilers based on gcc and musl libc"
   homepage "https://github.com/jthat/musl-cross-make"
-  url "https://github.com/jthat/musl-cross-make/archive/#{CROSSMAKE_REV}.tar.gz"
-  version "0.9.9-#{CROSSMAKE_REV}"
-  sha256 "8eed14000fdf4ab61a309e294eb482724e322dac82d9496541c1ae4f76552a16"
-  head "https://github.com/jthat/musl-cross-make.git", branch: CROSSMAKE_REV
+  url "https://github.com/jthat/musl-cross-make/archive/v1.0.0.tar.gz"
+  sha256 "7074507b9f068c80fe769350e3b613702652704e89f2887702551be94e6d4d0e"
+  head "https://github.com/jthat/musl-cross-make.git", branch: "master"
 
   OPTION_TARGET_MAP = {
     "x86"       => "i686-linux-musl",
