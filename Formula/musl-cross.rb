@@ -4,20 +4,15 @@
 class MuslCross < Formula
   desc "Linux cross compilers based on gcc and musl libc"
   homepage "https://github.com/jthat/musl-cross-make"
-  url "https://github.com/jthat/musl-cross-make/archive/v1.0.0.tar.gz"
-  sha256 "7074507b9f068c80fe769350e3b613702652704e89f2887702551be94e6d4d0e"
+  url "https://github.com/jthat/musl-cross-make/archive/v1.1.0.tar.gz"
+  sha256 "ee9b6e5c84e1e0e7a9c69ba110ec503d63781c4be4a9d767dfad36200690ce30"
   head "https://github.com/jthat/musl-cross-make.git", branch: "master"
-  bottle do
-    root_url "https://github.com/jthat/homebrew-musl-cross/releases/download/musl-cross-1.0.0"
-    sha256 cellar: :any,                 ventura:      "fdc4ca687ff1b6f6ecdb4d4a92e8fdd96b2b3055ac84646d794fface520777bb"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "7c27418063115d699dbce9d499ca3c85e97d84cb887d625adc27f44d5c31bb5c"
-  end
 
-  LINUX_VER      = "4.19.284"
-  GCC_VER        = "13.1.0"
-  BINUTILS_VER   = "2.40"
+  LINUX_VER      = "4.19.295"
+  GCC_VER        = "13.2.0"
+  BINUTILS_VER   = "2.41"
   MUSL_VER       = "1.2.4"
-  CONFIG_SUB_REV = "63acb96f9247"
+  CONFIG_SUB_REV = "28ea239c53a2"
 
   OPTION_TARGET_MAP = {
     "x86"       => "i686-linux-musl",
@@ -60,17 +55,17 @@ class MuslCross < Formula
 
   resource "linux-#{LINUX_VER}.tar.xz" do
     url "https://cdn.kernel.org/pub/linux/kernel/v#{LINUX_VER.sub(/^([^.])\..*$/, '\1')}.x/linux-#{LINUX_VER}.tar.xz"
-    sha256 "7fb9ee20c7e52f9be6d9f501e8498a22f4b364abfde136143749a77e597fd03e"
+    sha256 "b732c2e4f08576a9dd5bb14213cead3835acbb101a91aaba3d6ace302fd538ac"
   end
 
   resource "gcc-#{GCC_VER}.tar.xz" do
     url "https://ftp.gnu.org/gnu/gcc/gcc-#{GCC_VER}/gcc-#{GCC_VER}.tar.xz"
-    sha256 "61d684f0aa5e76ac6585ad8898a2427aade8979ed5e7f85492286c4dfc13ee86"
+    sha256 "e275e76442a6067341a27f04c5c6b83d8613144004c0413528863dc6b5c743da"
   end
 
   resource "binutils-#{BINUTILS_VER}.tar.xz" do
     url "https://ftp.gnu.org/gnu/binutils/binutils-#{BINUTILS_VER}.tar.xz"
-    sha256 "0f8a4c272d7f17f369ded10a4aca28b8e304828e95526da482b0ccc4dfc9d8e1"
+    sha256 "ae9a5789e23459e59606e6714723f2d3ffc31c03174191ef0d015bdf06007450"
   end
 
   resource "musl-#{MUSL_VER}.tar.gz" do
@@ -80,7 +75,7 @@ class MuslCross < Formula
 
   resource "config.sub" do
     url "https://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=#{CONFIG_SUB_REV}"
-    sha256 "b45ba96fa578cfca60ed16e27e689f10812c3f946535e779229afe7a840763e6"
+    sha256 "465c5fe67c7d36b72e808812716445d4d38d4b94734ca8d36a8639d12323878b"
   end
 
   def install
